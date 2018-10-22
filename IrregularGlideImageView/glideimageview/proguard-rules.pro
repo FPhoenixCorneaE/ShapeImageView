@@ -23,3 +23,25 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#Glide
+-keep public class * implements com.bumptech.glide.module.GlideModule
+-keep public class * extends com.bumptech.glide.module.AppGlideModule
+-keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
+  **[] $VALUES;
+  public *;
+}
+# for DexGuard only
+#-keepresourcexmlelements manifest/application/meta-data@value=GlideModule
+
+#----------------------------------------------------------------------------
+-ignorewarnings
+
+-dontwarn com.wkz.framework.**
+-keep class com.wkz.framework.widget.glideimageview.progress.OnGlideImageViewListener{*;}
+-keep class com.wkz.framework.widget.glideimageview.progress.OnProgressListener{*;}
+-keep class com.wkz.framework.widget.glideimageview.GlideImageView{
+    public <fields>;
+    public <methods>;
+}
+

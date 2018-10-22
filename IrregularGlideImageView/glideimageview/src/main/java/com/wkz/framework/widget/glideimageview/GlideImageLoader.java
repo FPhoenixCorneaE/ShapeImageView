@@ -1,4 +1,4 @@
-package com.sunfusheng.glideimageview;
+package com.wkz.framework.widget.glideimageview;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -16,10 +16,10 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.sunfusheng.glideimageview.progress.OnGlideImageViewListener;
-import com.sunfusheng.glideimageview.progress.OnProgressListener;
-import com.sunfusheng.glideimageview.progress.ProgressManager;
-import com.sunfusheng.glideimageview.transformation.GlideCircleTransformation;
+import com.wkz.framework.widget.glideimageview.progress.OnGlideImageViewListener;
+import com.wkz.framework.widget.glideimageview.progress.OnProgressListener;
+import com.wkz.framework.widget.glideimageview.progress.ProgressManager;
+import com.wkz.framework.widget.glideimageview.transformation.GlideCircleTransformation;
 
 import java.lang.ref.WeakReference;
 

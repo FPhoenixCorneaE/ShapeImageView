@@ -1,4 +1,4 @@
-package com.sunfusheng.glideimageview.util;
+package com.wkz.framework.widget.glideimageview.util;
 
 import android.content.Context;
 import android.util.DisplayMetrics;

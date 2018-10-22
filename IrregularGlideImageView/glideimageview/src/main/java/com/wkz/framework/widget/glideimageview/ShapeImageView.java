@@ -1,4 +1,4 @@
-package com.sunfusheng.glideimageview;
+package com.wkz.framework.widget.glideimageview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -19,7 +19,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.sunfusheng.glideimageview.util.DisplayUtil;
+import com.wkz.framework.widget.glideimageview.util.DisplayUtil;
+import com.wkz.framework.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -75,18 +76,18 @@ public class ShapeImageView extends ImageView {
 
     private void init(Context context, AttributeSet attrs) {
         if (attrs != null) {
-            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.ShapeImageViewStyle);
-            borderWidth = array.getDimensionPixelOffset(R.styleable.ShapeImageViewStyle_siv_border_width, borderWidth);
-            borderColor = array.getColor(R.styleable.ShapeImageViewStyle_siv_border_color, borderColor);
-            radius = array.getDimensionPixelOffset(R.styleable.ShapeImageViewStyle_siv_radius, DEFAULT_RECTANGLE_RADIUS);
-            radiusTopLeft = array.getDimensionPixelOffset(R.styleable.ShapeImageViewStyle_siv_radius_top_left, DEFAULT_RECTANGLE_RADIUS);
-            radiusTopRight = array.getDimensionPixelOffset(R.styleable.ShapeImageViewStyle_siv_radius_top_right, DEFAULT_RECTANGLE_RADIUS);
-            radiusBottomLeft = array.getDimensionPixelOffset(R.styleable.ShapeImageViewStyle_siv_radius_bottom_left, DEFAULT_RECTANGLE_RADIUS);
-            radiusBottomRight = array.getDimensionPixelOffset(R.styleable.ShapeImageViewStyle_siv_radius_bottom_right, DEFAULT_RECTANGLE_RADIUS);
-            pressedAlpha = array.getFloat(R.styleable.ShapeImageViewStyle_siv_pressed_alpha, pressedAlpha);
+            TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.fr_ShapeImageViewStyle);
+            borderWidth = array.getDimensionPixelOffset(R.styleable.fr_ShapeImageViewStyle_fr_siv_border_width, borderWidth);
+            borderColor = array.getColor(R.styleable.fr_ShapeImageViewStyle_fr_siv_border_color, borderColor);
+            radius = array.getDimensionPixelOffset(R.styleable.fr_ShapeImageViewStyle_fr_siv_radius, DEFAULT_RECTANGLE_RADIUS);
+            radiusTopLeft = array.getDimensionPixelOffset(R.styleable.fr_ShapeImageViewStyle_fr_siv_radius_top_left, DEFAULT_RECTANGLE_RADIUS);
+            radiusTopRight = array.getDimensionPixelOffset(R.styleable.fr_ShapeImageViewStyle_fr_siv_radius_top_right, DEFAULT_RECTANGLE_RADIUS);
+            radiusBottomLeft = array.getDimensionPixelOffset(R.styleable.fr_ShapeImageViewStyle_fr_siv_radius_bottom_left, DEFAULT_RECTANGLE_RADIUS);
+            radiusBottomRight = array.getDimensionPixelOffset(R.styleable.fr_ShapeImageViewStyle_fr_siv_radius_bottom_right, DEFAULT_RECTANGLE_RADIUS);
+            pressedAlpha = array.getFloat(R.styleable.fr_ShapeImageViewStyle_fr_siv_pressed_alpha, pressedAlpha);
             if (pressedAlpha > 1) pressedAlpha = 1;
-            pressedColor = array.getColor(R.styleable.ShapeImageViewStyle_siv_pressed_color, pressedColor);
-            shapeType = array.getInteger(R.styleable.ShapeImageViewStyle_siv_shape_type, shapeType);
+            pressedColor = array.getColor(R.styleable.fr_ShapeImageViewStyle_fr_siv_pressed_color, pressedColor);
+            shapeType = array.getInteger(R.styleable.fr_ShapeImageViewStyle_fr_siv_shape_type, shapeType);
             array.recycle();
         }
 
@@ -154,13 +155,7 @@ public class ShapeImageView extends ImageView {
         paint.setColor(0xffffffff);
         paint.setAntiAlias(true);
 
-        int saveFlags = Canvas.MATRIX_SAVE_FLAG
-                | Canvas.CLIP_SAVE_FLAG
-                | Canvas.HAS_ALPHA_LAYER_SAVE_FLAG
-                | Canvas.FULL_COLOR_LAYER_SAVE_FLAG
-                | Canvas.CLIP_TO_LAYER_SAVE_FLAG;
-
-        canvas.saveLayer(0, 0, width, height, null, saveFlags);
+        canvas.saveLayer(0, 0, width, height, null, Canvas.ALL_SAVE_FLAG);
 
         if (shapeType == ShapeType.RECTANGLE) {
             Path path = new Path();

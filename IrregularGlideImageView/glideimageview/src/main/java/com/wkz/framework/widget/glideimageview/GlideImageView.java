@@ -1,4 +1,4 @@
-package com.sunfusheng.glideimageview;
+package com.wkz.framework.widget.glideimageview;
 
 import android.content.Context;
 import android.net.Uri;
@@ -6,8 +6,8 @@ import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 
 import com.bumptech.glide.request.RequestOptions;
-import com.sunfusheng.glideimageview.progress.OnGlideImageViewListener;
-import com.sunfusheng.glideimageview.progress.OnProgressListener;
+import com.wkz.framework.widget.glideimageview.progress.OnGlideImageViewListener;
+import com.wkz.framework.widget.glideimageview.progress.OnProgressListener;
 
 /**
  * Created by sunfusheng on 2017/6/6.

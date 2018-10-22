@@ -3,7 +3,8 @@ package com.wkz.irregularglideimageview;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.sunfusheng.glideimageview.GlideImageView;
+import com.wkz.framework.widget.glideimageview.GlideImageView;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,15 +29,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void initView() {
 
-        mImage11Iv = (GlideImageView) findViewById(R.id.iv_image11);
-        mImage12Iv = (GlideImageView) findViewById(R.id.iv_image12);
-        mImage21Iv = (GlideImageView) findViewById(R.id.iv_image21);
-        mImage22Iv = (GlideImageView) findViewById(R.id.iv_image22);
-        mImage31Iv = (GlideImageView) findViewById(R.id.iv_image31);
-        mImage32Iv = (GlideImageView) findViewById(R.id.iv_image32);
-        mImage41Iv = (GlideImageView) findViewById(R.id.iv_image41);
-        mImage51Iv = (GlideImageView) findViewById(R.id.iv_image51);
-        mImage52Iv = (GlideImageView) findViewById(R.id.iv_image52);
+        mImage11Iv = findViewById(R.id.iv_image11);
+        mImage12Iv = findViewById(R.id.iv_image12);
+        mImage21Iv = findViewById(R.id.iv_image21);
+        mImage22Iv = findViewById(R.id.iv_image22);
+        mImage31Iv = findViewById(R.id.iv_image31);
+        mImage32Iv = findViewById(R.id.iv_image32);
+        mImage41Iv = findViewById(R.id.iv_image41);
+        mImage51Iv = findViewById(R.id.iv_image51);
+        mImage52Iv = findViewById(R.id.iv_image52);
 
         mImage11Iv.loadImage("https://img5.duitang.com/uploads/item/201411/29/20141129013744_UJEuu.gif", 0);
         mImage12Iv.loadImage("https://img5.duitang.com/uploads/item/201411/29/20141129013744_UJEuu.gif", 0);

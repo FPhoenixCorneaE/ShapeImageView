@@ -1,4 +1,4 @@
-package com.sunfusheng.glideimageview.progress;
+package com.wkz.framework.widget.glideimageview.progress;
 
 import com.bumptech.glide.load.engine.GlideException;
 
