@@ -8,7 +8,7 @@ IrregularGlideImageView
 
     3.可以设置触摸图片时的颜色、透明度。
     
-    ![Image](https://raw.githubusercontent.com/FPhoenixCorneaE/IrregularGlideImageView/master/IrregularGlideImageView/image/1.jpg)
+    <div align=center><img width="150" height="150" src="https://raw.githubusercontent.com/FPhoenixCorneaE/IrregularGlideImageView/master/IrregularGlideImageView/image/1.jpg" alt="预览图片"/></div>
     
     XML中使用：
     
