@@ -9,57 +9,58 @@
 ------------------------------------------------------------------------------------
 
 <p align="center"> <img src="https://raw.githubusercontent.com/FPhoenixCorneaE/IrregularGlideImageView/master/IrregularGlideImageView/image/1.jpg" alt="预览图片"  width="200" height="300"></p>
+
 ------------------------------------------------------------------------------------
 
 XML中使用：
 -----------
 
 ```
-<com.sunfusheng.glideimageview.GlideImageView
+<com.wkz.framework.widget.glideimageview.GlideImageView
             android:id="@+id/iv_image11"
             android:layout_width="150dp"
             android:layout_height="90dp"
             android:layout_margin="5dp"
             android:scaleType="centerCrop"
-            app:siv_border_color="@android:color/holo_purple"
-            app:siv_border_width="3dp"
-            app:siv_pressed_alpha="0.7"
-            app:siv_pressed_color="@android:color/holo_blue_dark"
-            app:siv_radius_top_left="10dp"
-            app:siv_radius_top_right="10dp"
-            app:siv_shape_type="rectangle" />
+            app:fr_siv_border_color="@android:color/holo_purple"
+            app:fr_siv_border_width="3dp"
+            app:fr_siv_pressed_alpha="0.7"
+            app:fr_siv_pressed_color="@android:color/holo_blue_dark"
+            app:fr_siv_radius_top_left="10dp"
+            app:fr_siv_radius_top_right="10dp"
+            app:fr_siv_shape_type="rectangle" />
 ```
 ```
-<com.sunfusheng.glideimageview.GlideImageView
+<com.wkz.framework.widget.glideimageview.GlideImageView
             android:id="@+id/iv_image12"
             android:layout_width="150dp"
             android:layout_height="90dp"
             android:layout_margin="5dp"
             android:scaleType="centerCrop"
-            app:siv_border_color="@android:color/holo_purple"
-            app:siv_border_width="3dp"
-            app:siv_pressed_alpha="0.7"
-            app:siv_pressed_color="@android:color/holo_blue_dark"
-            app:siv_radius_bottom_left="10dp"
-            app:siv_radius_bottom_right="10dp"
-            app:siv_shape_type="rectangle" />
+            app:fr_siv_border_color="@android:color/holo_purple"
+            app:fr_siv_border_width="3dp"
+            app:fr_siv_pressed_alpha="0.7"
+            app:fr_siv_pressed_color="@android:color/holo_blue_dark"
+            app:fr_siv_radius_bottom_left="10dp"
+            app:fr_siv_radius_bottom_right="10dp"
+            app:fr_siv_shape_type="rectangle" />
  ```
 
  ```
- <com.sunfusheng.glideimageview.GlideImageView
+ <com.wkz.framework.widget.glideimageview.GlideImageView
             android:id="@+id/iv_image21"
             android:layout_width="150dp"
             android:layout_height="90dp"
             android:layout_margin="5dp"
             android:scaleType="centerCrop"
-            app:siv_border_color="@android:color/holo_purple"
-            app:siv_border_width="3dp"
-            app:siv_pressed_alpha="0.7"
-            app:siv_pressed_color="@android:color/holo_blue_dark"
-            app:siv_radius="-10dp"
-            app:siv_radius_bottom_left="10dp"
-            app:siv_radius_top_left="10dp"
-           app:siv_shape_type="rectangle" />
+            app:fr_siv_border_color="@android:color/holo_purple"
+            app:fr_siv_border_width="3dp"
+            app:fr_siv_pressed_alpha="0.7"
+            app:fr_siv_pressed_color="@android:color/holo_blue_dark"
+            app:fr_siv_radius="-10dp"
+            app:fr_siv_radius_bottom_left="10dp"
+            app:fr_siv_radius_top_left="10dp"
+            app:fr_siv_shape_type="rectangle" />
  ```
 
 参考自sunfusheng大神的GlideImageView：https://github.com/sfsheng0322/GlideImageView。
