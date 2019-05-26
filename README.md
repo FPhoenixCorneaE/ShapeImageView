@@ -8,7 +8,7 @@
     
 ------------------------------------------------------------------------------------
 
-<p align="center"> <img src="https://raw.githubusercontent.com/FPhoenixCorneaE/IrregularGlideImageView/master/IrregularGlideImageView/image/1.jpg" alt="预览图片"  width="200" height="300"></p>
+<p align="center"> <img src="https://github.com/FPhoenixCorneaE/IrregularGlideImageView/blob/master/image/1.jpg" alt="预览图片"  width="200" height="300"></p>
 
 ------------------------------------------------------------------------------------
 
