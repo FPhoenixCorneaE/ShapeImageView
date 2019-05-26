@@ -6,3 +6,11 @@
 /IrregularGlideImageView/glideimageview/glideimageview.iml
 /IrregularGlideImageView/IrregularGlideImageView.iml
 /IrregularGlideImageView/build
+/IrregularGlideImageView.iml
+/.gradle
+/.idea
+/app/app.iml
+/glideimageview/glideimageview.iml
+/app/build
+/glideimageview/build
+/local.properties
