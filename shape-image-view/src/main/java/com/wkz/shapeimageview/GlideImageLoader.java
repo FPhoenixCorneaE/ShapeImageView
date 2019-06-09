@@ -2,7 +2,6 @@ package com.wkz.shapeimageview;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.DrawableRes;
@@ -11,15 +10,16 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.TransitionOptions;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.wkz.shapeimageview.progress.OnGlideImageViewListener;
 import com.wkz.shapeimageview.progress.OnProgressListener;
 import com.wkz.shapeimageview.progress.ProgressManager;
-import com.wkz.shapeimageview.transformation.GlideCircleTransformation;
 
 import java.lang.ref.WeakReference;
 
@@ -30,9 +30,6 @@ import java.lang.ref.WeakReference;
  */
 public class GlideImageLoader {
 
-    private static final String ANDROID_RESOURCE = "android.resource://";
-    private static final String FILE = "file://";
-    private static final String SEPARATOR = "/";
     private static final String HTTP = "http";
 
     private WeakReference<ImageView> mImageView;
@@ -46,11 +43,8 @@ public class GlideImageLoader {
     private OnGlideImageViewListener onGlideImageViewListener;
     private OnProgressListener onProgressListener;
 
-    public static GlideImageLoader create(ImageView imageView) {
-        return new GlideImageLoader(imageView);
-    }
 
-    private GlideImageLoader(ImageView imageView) {
+    public GlideImageLoader(ImageView imageView) {
         mImageView = new WeakReference<>(imageView);
         mMainThreadHandler = new Handler(Looper.getMainLooper());
     }
@@ -60,36 +54,29 @@ public class GlideImageLoader {
     }
 
     public Context getContext() {
-        if (getImageView() != null) {
-            return getImageView().getContext();
-        }
-        return null;
+        return getImageView() != null ? getImageView().getContext() : null;
     }
 
     public String getImageUrl() {
         return mImageUrlObj == null || !(mImageUrlObj instanceof String) ? null : (String) mImageUrlObj;
     }
 
-    public Uri resId2Uri(int resourceId) {
-        return getContext() == null ? null : Uri.parse(ANDROID_RESOURCE + getContext().getPackageName() + SEPARATOR + resourceId);
+    public void load(Object obj, int... placeholder) {
+        load(obj, requestOptions(placeholder));
     }
 
-    public void load(int resId, RequestOptions options) {
-        load(resId2Uri(resId), options);
-    }
-
-    public void load(Uri uri, RequestOptions options) {
-        if (uri == null || getContext() == null) {
+    public void load(Object obj, RequestOptions options) {
+        if (getContext() == null) {
             return;
         }
-        requestBuilder(uri, options).into(getImageView());
+        requestBuilder(obj, options).into(getImageView());
     }
 
-    public void load(String url, RequestOptions options) {
-        if (url == null || getContext() == null) {
+    public void load(Object obj, TransitionOptions<?, ? super Drawable> transitionOptions, int... placeholder) {
+        if (getContext() == null || transitionOptions == null) {
             return;
         }
-        requestBuilder(url, options).into(getImageView());
+        requestBuilder(obj, requestOptions(placeholder)).transition(transitionOptions).into(getImageView());
     }
 
     public RequestBuilder<Drawable> requestBuilder(Object obj, RequestOptions options) {
@@ -114,47 +101,40 @@ public class GlideImageLoader {
                 });
     }
 
-    public RequestOptions requestOptions(int placeholderResId) {
-        return requestOptions(placeholderResId, placeholderResId);
+    public RequestOptions requestOptions(@DrawableRes int... placeholder) {
+        RequestOptions requestOptions = new RequestOptions();
+        if (placeholder.length == 0) {
+            return requestOptions;
+        } else if (placeholder.length == 1) {
+            return requestOptions.placeholder(placeholder[0])
+                    .error(placeholder[0]);
+        } else {
+            return requestOptions.placeholder(placeholder[0])
+                    .error(placeholder[1]);
+        }
     }
 
-    public RequestOptions requestOptions(int placeholderResId, int errorResId) {
-        return new RequestOptions()
-                .placeholder(placeholderResId)
-                .error(errorResId);
+    public RequestOptions requestOptions(Drawable... placeholder) {
+        RequestOptions requestOptions = new RequestOptions();
+        if (placeholder.length == 0) {
+            return requestOptions;
+        } else if (placeholder.length == 1) {
+            return requestOptions.placeholder(placeholder[0])
+                    .error(placeholder[0]);
+        } else {
+            return requestOptions.placeholder(placeholder[0])
+                    .error(placeholder[1]);
+        }
     }
 
-    public RequestOptions circleRequestOptions(int placeholderResId) {
-        return circleRequestOptions(placeholderResId, placeholderResId);
+    public RequestOptions circleRequestOptions(@DrawableRes int... placeholder) {
+        return requestOptions(placeholder)
+                .transform(new CircleCrop());
     }
 
-    public RequestOptions circleRequestOptions(int placeholderResId, int errorResId) {
-        return requestOptions(placeholderResId, errorResId)
-                .transform(new GlideCircleTransformation());
-    }
-
-    public void loadImage(String url, int placeholderResId) {
-        load(url, requestOptions(placeholderResId));
-    }
-
-    public void loadLocalImage(@DrawableRes int resId, int placeholderResId) {
-        load(resId, requestOptions(placeholderResId));
-    }
-
-    public void loadLocalImage(String localPath, int placeholderResId) {
-        load(FILE + localPath, requestOptions(placeholderResId));
-    }
-
-    public void loadCircleImage(String url, int placeholderResId) {
-        load(url, circleRequestOptions(placeholderResId));
-    }
-
-    public void loadLocalCircleImage(int resId, int placeholderResId) {
-        load(resId, circleRequestOptions(placeholderResId));
-    }
-
-    public void loadLocalCircleImage(String localPath, int placeholderResId) {
-        load(FILE + localPath, circleRequestOptions(placeholderResId));
+    public RequestOptions circleRequestOptions(Drawable... placeholder) {
+        return requestOptions(placeholder)
+                .transform(new CircleCrop());
     }
 
     private void addProgressListener() {
@@ -193,29 +173,24 @@ public class GlideImageLoader {
     }
 
     private void mainThreadCallback(final long bytesRead, final long totalBytes, final boolean isDone, final GlideException exception) {
-        mMainThreadHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                final int percent = (int) ((bytesRead * 1.0f / totalBytes) * 100.0f);
-                if (onProgressListener != null) {
-                    onProgressListener.onProgress((String) mImageUrlObj, bytesRead, totalBytes, isDone, exception);
-                }
+        mMainThreadHandler.post(() -> {
+            final int percent = (int) ((bytesRead * 1.0f / totalBytes) * 100.0f);
+            if (onProgressListener != null) {
+                onProgressListener.onProgress((String) mImageUrlObj, bytesRead, totalBytes, isDone, exception);
+            }
 
-                if (onGlideImageViewListener != null) {
-                    onGlideImageViewListener.onProgress(percent, isDone, exception);
-                }
+            if (onGlideImageViewListener != null) {
+                onGlideImageViewListener.onProgress(percent, isDone, exception);
             }
         });
     }
 
-    public void setOnGlideImageViewListener(String imageUrl, OnGlideImageViewListener onGlideImageViewListener) {
-        this.mImageUrlObj = imageUrl;
+    public void setOnGlideImageViewListener(OnGlideImageViewListener onGlideImageViewListener) {
         this.onGlideImageViewListener = onGlideImageViewListener;
         addProgressListener();
     }
 
-    public void setOnProgressListener(String imageUrl, OnProgressListener onProgressListener) {
-        this.mImageUrlObj = imageUrl;
+    public void setOnProgressListener(OnProgressListener onProgressListener) {
         this.onProgressListener = onProgressListener;
         addProgressListener();
     }

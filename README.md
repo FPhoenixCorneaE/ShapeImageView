@@ -1,14 +1,11 @@
-# IrregularGlideImageView
+# ShapeImageView
 
-    1.基于Glide V4.0封装的图片加载库，可以监听加载图片时的进度。
+   1、可以通过设置属性加载圆角矩形(四个圆角可以任意设置)图片、圆形图片以及边框。
 
-    2.可以通过设置属性加载圆角矩形(四个圆角可以任意设置)图片、圆形图片以及边框。
-
-    3.可以设置触摸图片时的颜色、透明度。
     
 ------------------------------------------------------------------------------------
 
-<p align="center"> <img src="https://github.com/FPhoenixCorneaE/IrregularGlideImageView/blob/master/image/1.jpg" alt="预览图片"  width="200" height="300"></p>
+<p align="center"> <img src="https://github.com/FPhoenixCorneaE/ShapeImageView/blob/master/image/shape_image_view.gif" alt="预览图片"  width="320" height="480"></p>
 
 ------------------------------------------------------------------------------------
 
@@ -16,51 +13,44 @@ XML中使用：
 -----------
 
 ```
-<com.wkz.framework.widget.glideimageview.GlideImageView
-            android:id="@+id/iv_image11"
+<com.wkz.shapeimageview.ShapeImageView
+            android:id="@+id/iv_image31"
             android:layout_width="150dp"
             android:layout_height="90dp"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:scaleType="centerCrop"
-            app:fr_siv_border_color="@android:color/holo_purple"
-            app:fr_siv_border_width="3dp"
-            app:fr_siv_pressed_alpha="0.7"
-            app:fr_siv_pressed_color="@android:color/holo_blue_dark"
-            app:fr_siv_radius_top_left="10dp"
-            app:fr_siv_radius_top_right="10dp"
-            app:fr_siv_shape_type="rectangle" />
+            android:src="@mipmap/pic_wrath_of_the_lich_king"
+            app:siv_border_color="@android:color/holo_purple"
+            app:siv_border_width="3dp"
+            app:siv_radius="-10dp"
+            app:siv_radius_bottom_right="10dp"
+            app:siv_radius_top_left="10dp"
+            app:siv_shape_type="rectangle" />
 ```
 ```
-<com.wkz.framework.widget.glideimageview.GlideImageView
-            android:id="@+id/iv_image12"
+<com.wkz.shapeimageview.ShapeImageView
+            android:id="@+id/iv_image41"
             android:layout_width="150dp"
             android:layout_height="90dp"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:scaleType="centerCrop"
-            app:fr_siv_border_color="@android:color/holo_purple"
-            app:fr_siv_border_width="3dp"
-            app:fr_siv_pressed_alpha="0.7"
-            app:fr_siv_pressed_color="@android:color/holo_blue_dark"
-            app:fr_siv_radius_bottom_left="10dp"
-            app:fr_siv_radius_bottom_right="10dp"
-            app:fr_siv_shape_type="rectangle" />
+            android:src="@mipmap/pic_listen_to_the_autumn_rain"
+            app:siv_border_color="@android:color/holo_purple"
+            app:siv_border_width="3dp"
+            app:siv_radius="10dp"
+            app:siv_shape_type="rectangle" />
  ```
 
  ```
- <com.wkz.framework.widget.glideimageview.GlideImageView
-            android:id="@+id/iv_image21"
-            android:layout_width="150dp"
-            android:layout_height="90dp"
-            android:layout_margin="5dp"
-            android:scaleType="centerCrop"
-            app:fr_siv_border_color="@android:color/holo_purple"
-            app:fr_siv_border_width="3dp"
-            app:fr_siv_pressed_alpha="0.7"
-            app:fr_siv_pressed_color="@android:color/holo_blue_dark"
-            app:fr_siv_radius="-10dp"
-            app:fr_siv_radius_bottom_left="10dp"
-            app:fr_siv_radius_top_left="10dp"
-            app:fr_siv_shape_type="rectangle" />
+ <com.wkz.shapeimageview.ShapeImageView
+             android:id="@+id/iv_image51"
+             android:layout_width="90dp"
+             android:layout_height="90dp"
+             android:layout_margin="10dp"
+             android:scaleType="centerCrop"
+             android:src="@mipmap/pic_the_manga_beauties"
+             app:siv_border_color="@android:color/holo_purple"
+             app:siv_border_width="3dp"
+             app:siv_shape_type="circle" />
  ```
 
-参考自sunfusheng大神的GlideImageView：https://github.com/sfsheng0322/GlideImageView。

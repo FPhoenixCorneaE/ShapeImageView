@@ -15,14 +15,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
-import android.support.annotation.FloatRange;
 import android.support.annotation.IntDef;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.widget.ImageView;
 
-import com.wkz.shapeimageview.util.DisplayUtil;
+import com.bumptech.glide.TransitionOptions;
+import com.bumptech.glide.request.RequestOptions;
+import com.wkz.shapeimageview.progress.OnGlideImageViewListener;
+import com.wkz.shapeimageview.progress.OnProgressListener;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -37,35 +38,27 @@ public class ShapeImageView extends ImageView {
     /**
      * 图片的宽高
      */
-    private int width, height;
+    private int mWidth, mHeight;
     /**
      * 边框颜色、边框宽度
      */
-    private int borderColor = 0x1A000000, borderWidth;
+    private int mBorderColor, mBorderWidth;
     /**
-     * 圆角弧度
+     * 圆角、左上角、右上角、左下角、右下角弧度
      */
-    private int radius, radiusTopLeft, radiusTopRight, radiusBottomLeft, radiusBottomRight;
+    private int mRadius, mRadiusTopLeft, mRadiusTopRight, mRadiusBottomLeft, mRadiusBottomRight;
     /**
      * 圆角弧度数组
      */
     private float[] mRadii;
     /**
-     * 图片类型（圆形, 矩形）
+     * 图片形状类型
      */
-    private int shapeType = ShapeType.RECTANGLE;
+    private int mShapeType = ShapeType.RECTANGLE;
     /**
-     * 按下的画笔
+     * 图片加载器
      */
-    private Paint pressedPaint;
-    /**
-     * 按下的透明度
-     */
-    private float pressedAlpha = 0.0F;
-    /**
-     * 按下的颜色
-     */
-    private int pressedColor = 0x1A000000;
+    private GlideImageLoader mImageLoader;
 
     @IntDef({
             ShapeType.RECTANGLE,
@@ -73,7 +66,13 @@ public class ShapeImageView extends ImageView {
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface ShapeType {
+        /**
+         * 矩形
+         */
         int RECTANGLE = 0;
+        /**
+         * 圆形
+         */
         int CIRCLE = 1;
     }
 
@@ -94,41 +93,21 @@ public class ShapeImageView extends ImageView {
         if (attrs != null) {
             TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.ShapeImageView);
             try {
-                borderWidth = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_border_width, borderWidth);
-                borderColor = array.getColor(R.styleable.ShapeImageView_siv_border_color, borderColor);
-                radius = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius, 0);
-                radiusTopLeft = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius_top_left, 0);
-                radiusTopRight = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius_top_right, 0);
-                radiusBottomLeft = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius_bottom_left, 0);
-                radiusBottomRight = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius_bottom_right, 0);
-                pressedAlpha = array.getFloat(R.styleable.ShapeImageView_siv_pressed_alpha, pressedAlpha);
-                if (pressedAlpha > 1) {
-                    pressedAlpha = 1;
-                } else if (pressedAlpha < 0) {
-                    pressedAlpha = 0;
-                }
-                pressedColor = array.getColor(R.styleable.ShapeImageView_siv_pressed_color, pressedColor);
-                shapeType = array.getInteger(R.styleable.ShapeImageView_siv_shape_type, shapeType);
+                mBorderWidth = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_border_width, 0);
+                mBorderColor = array.getColor(R.styleable.ShapeImageView_siv_border_color, 0);
+                mRadius = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius, 0);
+                mRadiusTopLeft = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius_top_left, 0);
+                mRadiusTopRight = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius_top_right, 0);
+                mRadiusBottomLeft = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius_bottom_left, 0);
+                mRadiusBottomRight = array.getDimensionPixelOffset(R.styleable.ShapeImageView_siv_radius_bottom_right, 0);
+                mShapeType = array.getInteger(R.styleable.ShapeImageView_siv_shape_type, ShapeType.RECTANGLE);
             } finally {
                 array.recycle();
             }
         }
 
-        initPressedPaint();
+        mImageLoader = new GlideImageLoader(this);
         initRadii();
-        setClickable(true);
-        setDrawingCacheEnabled(true);
-        setWillNotDraw(false);
-    }
-
-    /**
-     * 初始化按下的画笔
-     */
-    private void initPressedPaint() {
-        pressedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        pressedPaint.setStyle(Paint.Style.FILL);
-        pressedPaint.setColor(pressedColor);
-        pressedPaint.setAlpha(0);
     }
 
     /**
@@ -137,12 +116,21 @@ public class ShapeImageView extends ImageView {
     private void initRadii() {
         /*向路径中添加圆角矩形。radii数组定义圆角矩形的四个圆角的x,y半径。*/
         /*圆角的半径，依次为左上角xy半径，右上角，右下角，左下角*/
-        if (shapeType == ShapeType.RECTANGLE) {
-            if (radius > 0) {
-                mRadii = new float[]{radius, radius, radius, radius, radius, radius, radius, radius};
+        if (mShapeType == ShapeType.RECTANGLE) {
+            if (mRadius > 0) {
+                mRadii = new float[]{
+                        mRadius, mRadius,
+                        mRadius, mRadius,
+                        mRadius, mRadius,
+                        mRadius, mRadius
+                };
             } else {
-                mRadii = new float[]{radiusTopLeft, radiusTopLeft, radiusTopRight, radiusTopRight,
-                        radiusBottomRight, radiusBottomRight, radiusBottomLeft, radiusBottomLeft};
+                mRadii = new float[]{
+                        mRadiusTopLeft, mRadiusTopLeft,
+                        mRadiusTopRight, mRadiusTopRight,
+                        mRadiusBottomRight, mRadiusBottomRight,
+                        mRadiusBottomLeft, mRadiusBottomLeft
+                };
             }
         }
     }
@@ -150,15 +138,15 @@ public class ShapeImageView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        width = getMeasuredWidth();
-        height = getMeasuredHeight();
+        mWidth = getMeasuredWidth();
+        mHeight = getMeasuredHeight();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        width = w;
-        height = h;
+        mWidth = w;
+        mHeight = h;
     }
 
     @Override
@@ -172,7 +160,6 @@ public class ShapeImageView extends ImageView {
 
         drawDrawable(canvas, getBitmapFromDrawable(drawable));
         drawBorder(canvas);
-        drawPressed(canvas);
     }
 
     /**
@@ -186,20 +173,25 @@ public class ShapeImageView extends ImageView {
         paint.setColor(Color.WHITE);
         paint.setAntiAlias(true);
 
-        canvas.saveLayer(0, 0, width, height, null, Canvas.ALL_SAVE_FLAG);
+        canvas.saveLayer(0, 0, mWidth, mHeight, null, Canvas.ALL_SAVE_FLAG);
 
-        if (shapeType == ShapeType.RECTANGLE) {
+        if (mShapeType == ShapeType.RECTANGLE) {
             Path path = new Path();
-            RectF rectf = new RectF((float) borderWidth / 2,
-                    (float) borderWidth / 2,
-                    getWidth() - (float) borderWidth / 2,
-                    getHeight() - (float) borderWidth / 2
+            RectF rectf = new RectF((float) mBorderWidth / 2,
+                    (float) mBorderWidth / 2,
+                    getWidth() - (float) mBorderWidth / 2,
+                    getHeight() - (float) mBorderWidth / 2
             );
             path.addRoundRect(rectf, mRadii, Path.Direction.CW);
             canvas.drawPath(path, paint);
             path.close();
         } else {
-            canvas.drawCircle((float) width / 2, (float) height / 2, (float) width / 2 - borderWidth, paint);
+            canvas.drawCircle(
+                    (float) mWidth / 2,
+                    (float) mHeight / 2,
+                    (float) mWidth / 2 - mBorderWidth,
+                    paint
+            );
         }
 
         // SRC_IN 只显示两层图像交集部分的上层图像
@@ -221,27 +213,27 @@ public class ShapeImageView extends ImageView {
      * @param canvas 画布
      */
     private void drawBorder(Canvas canvas) {
-        if (borderWidth > 0) {
+        if (mBorderWidth > 0) {
             Paint paint = new Paint();
-            paint.setStrokeWidth(borderWidth);
+            paint.setStrokeWidth(mBorderWidth);
             paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(borderColor);
+            paint.setColor(mBorderColor);
             paint.setAntiAlias(true);
-            if (shapeType == ShapeType.RECTANGLE) {
+            if (mShapeType == ShapeType.RECTANGLE) {
                 Path path = new Path();
                 RectF rectf = new RectF(
-                        (float) borderWidth / 2,
-                        (float) borderWidth / 2,
-                        getWidth() - (float) borderWidth / 2,
-                        getHeight() - (float) borderWidth / 2
+                        (float) mBorderWidth / 2,
+                        (float) mBorderWidth / 2,
+                        getWidth() - (float) mBorderWidth / 2,
+                        getHeight() - (float) mBorderWidth / 2
                 );
                 path.addRoundRect(rectf, mRadii, Path.Direction.CW);
                 canvas.drawPath(path, paint);
             } else {
                 canvas.drawCircle(
-                        (float) width / 2,
-                        (float) height / 2,
-                        (float) (width - borderWidth) / 2,
+                        (float) mWidth / 2,
+                        (float) mHeight / 2,
+                        (float) (mWidth - mBorderWidth) / 2,
                         paint
                 );
             }
@@ -249,53 +241,7 @@ public class ShapeImageView extends ImageView {
     }
 
     /**
-     * 绘制按下效果
-     *
-     * @param canvas 画布
-     */
-    private void drawPressed(Canvas canvas) {
-        if (shapeType == ShapeType.RECTANGLE) {
-            Path path = new Path();
-            RectF rectf = new RectF(
-                    1,
-                    1,
-                    width - 1,
-                    height - 1
-            );
-            path.addRoundRect(rectf, mRadii, Path.Direction.CW);
-            canvas.drawPath(path, pressedPaint);
-        } else {
-            canvas.drawCircle(
-                    (float) width / 2,
-                    (float) height / 2,
-                    (float) width / 2,
-                    pressedPaint);
-        }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                pressedPaint.setAlpha((int) (pressedAlpha * 255));
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                pressedPaint.setAlpha(0);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                break;
-            default:
-                pressedPaint.setAlpha(0);
-                invalidate();
-                break;
-        }
-        return super.onTouchEvent(event);
-    }
-
-    /**
-     * 获取Bitmap内容
+     * 获取Bitmap
      *
      * @param drawable 图片
      * @return Bitmap
@@ -326,8 +272,8 @@ public class ShapeImageView extends ImageView {
      * @param id 颜色资源id
      */
     public void setBorderColor(@ColorRes int id) {
-        this.borderColor = ContextCompat.getColor(getContext(), id);
-        invalidate();
+        this.mBorderColor = ContextCompat.getColor(getContext(), id);
+        postInvalidate();
     }
 
     /**
@@ -336,30 +282,8 @@ public class ShapeImageView extends ImageView {
      * @param dpValue 边框宽度,单位为DP
      */
     public void setBorderWidth(int dpValue) {
-        this.borderWidth = DisplayUtil.dip2px(getContext(), dpValue);
-        invalidate();
-    }
-
-    /**
-     * 设置图片按下颜色透明度
-     *
-     * @param pressAlpha 按下颜色透明度
-     */
-    public void setPressedAlpha(@FloatRange(from = 0.0, to = 1.0) float pressAlpha) {
-        this.pressedAlpha = pressAlpha;
-        invalidate();
-    }
-
-    /**
-     * 设置图片按下的颜色
-     *
-     * @param id 颜色资源id
-     */
-    public void setPressedColor(@ColorRes int id) {
-        this.pressedColor = ContextCompat.getColor(getContext(), id);
-        pressedPaint.setColor(pressedColor);
-        pressedPaint.setAlpha(0);
-        invalidate();
+        this.mBorderWidth = DisplayUtils.dip2px(getContext(), dpValue);
+        postInvalidate();
     }
 
     /**
@@ -368,8 +292,18 @@ public class ShapeImageView extends ImageView {
      * @param dpValue 圆角半径
      */
     public void setRadius(int dpValue) {
-        this.radius = DisplayUtil.dip2px(getContext(), dpValue);
-        invalidate();
+        this.mRadius = DisplayUtils.dip2px(getContext(), dpValue);
+        postInvalidate();
+    }
+
+    /**
+     * 设置圆角半径
+     *
+     * @param radii 圆角半径
+     */
+    public void setRadii(float[] radii) {
+        this.mRadii = radii;
+        postInvalidate();
     }
 
     /**
@@ -378,7 +312,32 @@ public class ShapeImageView extends ImageView {
      * @param shapeType 形状类型{@link ShapeType}
      */
     public void setShapeType(@ShapeType int shapeType) {
-        this.shapeType = shapeType;
-        invalidate();
+        this.mShapeType = shapeType;
+        postInvalidate();
+    }
+
+    public ShapeImageView load(Object obj, int... placeholder) {
+        mImageLoader.load(obj, placeholder);
+        return this;
+    }
+
+    public ShapeImageView load(Object obj, RequestOptions options) {
+        mImageLoader.load(obj, options);
+        return this;
+    }
+
+    public ShapeImageView load(Object obj, TransitionOptions<?, ? super Drawable> transitionOptions, int... placeholder) {
+        mImageLoader.load(obj, transitionOptions, placeholder);
+        return this;
+    }
+
+    public ShapeImageView listener(OnGlideImageViewListener listener) {
+        mImageLoader.setOnGlideImageViewListener(listener);
+        return this;
+    }
+
+    public ShapeImageView listener(OnProgressListener listener) {
+        mImageLoader.setOnProgressListener(listener);
+        return this;
     }
 }
