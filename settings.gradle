@@ -1,1 +1,1 @@
-include ':app', ':glideimageview'
+include ':app', ':shape-image-view'
