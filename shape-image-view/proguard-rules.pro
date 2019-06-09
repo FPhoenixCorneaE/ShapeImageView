@@ -37,10 +37,10 @@
 #----------------------------------------------------------------------------
 -ignorewarnings
 
--dontwarn com.wkz.framework.**
--keep class com.wkz.framework.progress.OnGlideImageViewListener{*;}
--keep class com.wkz.framework.progress.OnProgressListener{*;}
--keep class com.wkz.framework.GlideImageView{
+-dontwarn com.wkz.shapeimageview.**
+-keep class com.wkz.shapeimageview.progress.OnGlideImageViewListener{*;}
+-keep class com.wkz.shapeimageview.progress.OnProgressListener{*;}
+-keep class com.wkz.shapeimageview.ShapeImageView{
     public <fields>;
     public <methods>;
 }
