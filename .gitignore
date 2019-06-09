@@ -14,3 +14,10 @@
 /app/build
 /glideimageview/build
 /local.properties
+/shape-image-view/build
+/shape-image-view/shape-image-view.iml
+/gradle
+/gradlew.bat
+/gradle.properties
+/gradlew
+/ShapeImageView.iml
