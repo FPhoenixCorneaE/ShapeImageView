@@ -53,4 +53,33 @@ XML中使用：
              app:siv_border_width="3dp"
              app:siv_shape_type="circle" />
  ```
+------------------------------------------------
 
+加载图片
+----------------------------------------------
+```
+mIvImage11.load("https://img5.duitang.com/uploads/item/201411/29/20141129013744_UJEuu.gif");
+        mIvImage12.load("http://b-ssl.duitang.com/uploads/item/201804/06/20180406175831_v2tcn.jpeg", 0);
+        mIvImage21.load(R.mipmap.pic_the_running_wolf, R.mipmap.pic_the_running_wolf);
+        mIvImage22.load(null, android.R.color.holo_red_dark, android.R.color.holo_red_dark);
+        mIvImage31.load(R.mipmap.pic_wrath_of_the_lich_king);
+        // 设置加载动画
+        mIvImage32.load(R.mipmap.pic_wrath_of_the_lich_king, GenericTransitionOptions.with(view -> {
+            PropertyValuesHolder scaleXAnim = PropertyValuesHolder.ofFloat("scaleX", 1.382f, 1f);
+            PropertyValuesHolder scaleYAnim = PropertyValuesHolder.ofFloat("scaleY", 1.382f, 1f);
+
+            ObjectAnimator.ofPropertyValuesHolder(view, scaleXAnim, scaleYAnim)
+                    .setDuration(200)
+                    .start();
+        }), android.R.color.darker_gray);
+        mIvImage41.load(R.mipmap.pic_listen_to_the_autumn_rain, DrawableTransitionOptions.withCrossFade(), 0);
+        mIvImage42.load("", android.R.color.darker_gray);
+        mIvImage51.load(R.mipmap.pic_the_manga_beauties, android.R.color.darker_gray);
+        // 自定义RequestOptions
+        mIvImage52.load(
+                R.mipmap.pic_the_manga_beauties,
+                new RequestOptions()
+                        .placeholder(android.R.color.darker_gray)
+                        .error(android.R.color.darker_gray)
+        );
+```
