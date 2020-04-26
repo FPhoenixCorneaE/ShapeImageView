@@ -1,6 +1,6 @@
 package com.wkz.shapeimageview.progress;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.bumptech.glide.load.engine.GlideException;
 

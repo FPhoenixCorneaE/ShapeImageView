@@ -3,7 +3,7 @@ package com.wkz.demo;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mIvImage51 = (ShapeImageView) findViewById(R.id.iv_image51);
         mIvImage52 = (ShapeImageView) findViewById(R.id.iv_image52);
 
-        mIvImage11.load("https://img5.duitang.com/uploads/item/201411/29/20141129013744_UJEuu.gif");
+        mIvImage11.load("http://cdn.duitang.com/uploads/item/201410/14/20141014171627_ssXRa.gif");
         mIvImage12.load("http://b-ssl.duitang.com/uploads/item/201804/06/20180406175831_v2tcn.jpeg", 0);
         mIvImage21.load(R.mipmap.pic_the_running_wolf, R.mipmap.pic_the_running_wolf);
         mIvImage22.load(null, android.R.color.holo_red_dark, android.R.color.holo_red_dark);
