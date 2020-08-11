@@ -63,7 +63,7 @@ class ShapeImageView @JvmOverloads constructor(
     /**
      * 图片加载器
      */
-    private lateinit var mImageLoader: GlideImageLoader
+    private var mImageLoader: GlideImageLoader = GlideImageLoader(this)
 
     /**
      * 矩形范围
@@ -494,7 +494,6 @@ class ShapeImageView @JvmOverloads constructor(
     }
 
     init {
-        mImageLoader = GlideImageLoader(this)
         initAttr(context, attrs)
     }
 }

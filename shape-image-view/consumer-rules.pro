@@ -43,7 +43,15 @@
 -dontwarn com.wkz.shapeimageview.**
 -keep class com.fphoenixcorneae.shapeimageview.progress.OnGlideImageViewListener{*;}
 -keep class com.fphoenixcorneae.shapeimageview.progress.OnProgressListener{*;}
+-keep class com.fphoenixcorneae.shapeimageview.progress.CircleProgressView{
+    public <fields>;
+    *** set*(...);
+    *** get*(...);
+}
 -keep class com.fphoenixcorneae.shapeimageview.ShapeImageView{
     public <fields>;
-    public <methods>;
+    *** load(...);
+    *** set*(...);
 }
+# @Retention注解的类不混淆
+-keep @kotlin.annotation.Retention class * {*;}
