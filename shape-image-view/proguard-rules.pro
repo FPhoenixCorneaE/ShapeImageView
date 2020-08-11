@@ -38,9 +38,9 @@
 -ignorewarnings
 
 -dontwarn com.wkz.shapeimageview.**
--keep class com.wkz.shapeimageview.progress.OnGlideImageViewListener{*;}
--keep class com.wkz.shapeimageview.progress.OnProgressListener{*;}
--keep class com.wkz.shapeimageview.ShapeImageView{
+-keep class com.fphoenixcorneae.shapeimageview.progress.OnGlideImageViewListener{*;}
+-keep class com.fphoenixcorneae.shapeimageview.progress.OnProgressListener{*;}
+-keep class com.fphoenixcorneae.shapeimageview.ShapeImageView{
     public <fields>;
     public <methods>;
 }

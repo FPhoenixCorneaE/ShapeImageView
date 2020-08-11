@@ -1,19 +1,19 @@
 ext {
 
     android = [
-            compileSdkVersion: 28,
-            buildToolsVersion: "28.0.3",
+            compileSdkVersion: 29,
+            buildToolsVersion: "29.0.3",
             minSdkVersion    : 17,
-            targetSdkVersion : 28,
+            targetSdkVersion : 29,
     ]
 
     dependenceVersion = [
-            support: "28.0.0",
-            glide  : "4.9.0",
+            appcompat: "1.1.0",
+            glide    : "4.11.0",
     ]
 
     support = [
-            appcompat: "com.android.support:appcompat-v7:$dependenceVersion.support",
+            appcompat: "androidx.appcompat:appcompat:$dependenceVersion.appcompat",
     ]
 
     dependencies = [

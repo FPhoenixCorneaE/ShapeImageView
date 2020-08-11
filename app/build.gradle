@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -43,4 +45,12 @@ dependencies {
     implementation fileTree(dir: 'aar', include: ['*.aar'])
     implementation rootProject.ext.supportLibs
     implementation project(path: ':shape-image-view')
+    implementation(rootProject.ext.dependencies.glide) {
+        exclude group: "com.android.support"
+    }
+    annotationProcessor rootProject.ext.dependencies.glide_compiler
+    implementation rootProject.ext.dependencies.glide_okhttp3_integration
+    implementation "androidx.core:core-ktx:1.3.0"
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
