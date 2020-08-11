@@ -21,7 +21,8 @@ import com.fphoenixcorneae.shapeimageview.progress.ProgressManager
 import java.lang.ref.WeakReference
 
 /**
- * @desc：图片加载器
+ * @desc：Glide图片加载器
+ * @date：2020-08-07 15:02
  */
 class GlideImageLoader(imageView: ImageView) {
     private val mImageView: WeakReference<ImageView>?
