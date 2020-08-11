@@ -44,7 +44,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation fileTree(dir: 'aar', include: ['*.aar'])
     implementation rootProject.ext.supportLibs
-//    implementation 'com.github.FPhoenixCorneaE:ShapeImageView:1.0.2'
+//    implementation 'com.github.FPhoenixCorneaE:ShapeImageView:1.0.3'
     implementation project(path: ':shape-image-view')
     implementation(rootProject.ext.dependencies.glide) {
         exclude group: "com.android.support"
