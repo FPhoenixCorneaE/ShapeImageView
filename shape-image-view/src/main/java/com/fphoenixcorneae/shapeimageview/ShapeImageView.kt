@@ -8,7 +8,6 @@ import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import androidx.annotation.ColorRes
-import androidx.annotation.IntDef
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.TransitionOptions
@@ -17,8 +16,9 @@ import com.fphoenixcorneae.shapeimageview.progress.OnGlideImageViewListener
 import com.fphoenixcorneae.shapeimageview.progress.OnProgressListener
 import kotlin.math.*
 
+
 /**
- * @desc：形状图像视图：圆形、矩形（圆角矩形）、心形
+ * @desc：形状图像视图：圆形、矩形（圆角矩形）、心形、星形
  * @date：2020-08-07 16:02
  */
 class ShapeImageView @JvmOverloads constructor(
@@ -58,7 +58,7 @@ class ShapeImageView @JvmOverloads constructor(
     /**
      * 图片形状类型,默认为矩形
      */
-    private var mShapeType = ShapeType.RECTANGLE
+    private var mShapeType = ShapeType.Rectangle
 
     /**
      * 图片加载器
@@ -80,28 +80,6 @@ class ShapeImageView @JvmOverloads constructor(
      * 保存心形所有点的坐标的数组
      */
     private var mHeartPointList: ArrayList<Pair<Double, Double>>? = null
-
-    /**
-     * 形状类型
-     */
-    @IntDef(
-            ShapeType.RECTANGLE,
-            ShapeType.CIRCLE,
-            ShapeType.HEART
-    )
-    @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
-    annotation class ShapeType {
-        companion object {
-            /* 矩形 */
-            const val RECTANGLE = 0
-
-            /* 圆形 */
-            const val CIRCLE = 1
-
-            /* 心形 */
-            const val HEART = 2
-        }
-    }
 
     private fun initAttr(
             context: Context,
@@ -140,7 +118,7 @@ class ShapeImageView @JvmOverloads constructor(
                 )
                 mShapeType = array.getInteger(
                         R.styleable.ShapeImageView_siv_shape_type,
-                        ShapeType.RECTANGLE
+                        ShapeType.Rectangle
                 )
             } finally {
                 array.recycle()
@@ -155,7 +133,7 @@ class ShapeImageView @JvmOverloads constructor(
      */
     private fun initProperties() {
         when (mShapeType) {
-            ShapeType.RECTANGLE -> {
+            ShapeType.Rectangle -> {
                 /* 初始化圆角弧度数组 */
                 /* 向路径中添加圆角矩形。radii数组定义圆角矩形的四个圆角的x,y半径。*/
                 /* 圆角的半径，依次为左上角xy半径，右上角，右下角，左下角 */
@@ -178,7 +156,7 @@ class ShapeImageView @JvmOverloads constructor(
                     }
                 }
             }
-            ShapeType.HEART -> {
+            ShapeType.Heart -> {
                 mHeartPointList = arrayListOf()
             }
         }
@@ -220,18 +198,14 @@ class ShapeImageView @JvmOverloads constructor(
         // 重置Path
         mDrawablePath.reset()
         when (mShapeType) {
-            ShapeType.RECTANGLE -> {
-                // 绘制矩形
-                drawRectangle()
-            }
-            ShapeType.CIRCLE -> {
-                // 绘制圆形
-                drawCircle()
-            }
-            ShapeType.HEART -> {
-                // 绘制心形
-                drawHeart()
-            }
+            // 绘制矩形
+            ShapeType.Rectangle -> drawRectangle()
+            // 绘制圆形
+            ShapeType.Circle -> drawCircle()
+            // 绘制心形
+            ShapeType.Heart -> drawHeart()
+            // 绘制星形
+            ShapeType.Star -> drawStar()
         }
         // 闭合图片路径
         mDrawablePath.close()
@@ -282,7 +256,7 @@ class ShapeImageView @JvmOverloads constructor(
         // 需要循环的次数
         val maxI = ceil(maxT / vt).toInt()
         // 控制心形大小
-        val size = min(mWidth / 2 , mHeight / 2 ) / 16
+        val size = min(mWidth / 2, mHeight / 2) / 16
         // 根据方程得到所有点的坐标
         mHeartPointList?.clear()
         for (i in 0..maxI) {
@@ -296,49 +270,88 @@ class ShapeImageView @JvmOverloads constructor(
             mHeartPointList?.add((x * size + (mWidth / 2).toFloat()) to (-y * size + (mHeight / 2).toFloat()))
         }
         // 根据点的坐标，画出心形线
-        setHeartPath()
+        setHeartPath(mDrawablePath)
+    }
+
+    /**
+     * 绘制星形
+     */
+    private fun drawStar() {
+        setStarPath(mDrawablePath, false)
     }
 
     /**
      * 获取心形路径
      */
-    private fun setHeartPath(isBorder: Boolean = false) {
+    private fun setHeartPath(path: Path) {
         mHeartPointList?.forEachIndexed { index, pair ->
-            when {
-                isBorder -> {
-                    when (index) {
-                        0 -> {
-                            mBorderPath.moveTo(
-                                    pair.first.toFloat(),
-                                    pair.second.toFloat()
-                            )
-                        }
-                        else -> {
-                            mBorderPath.lineTo(
-                                    pair.first.toFloat(),
-                                    pair.second.toFloat()
-                            )
-                        }
-                    }
-                }
-                else -> {
-                    when (index) {
-                        0 -> {
-                            mDrawablePath.moveTo(
-                                    pair.first.toFloat(),
-                                    pair.second.toFloat()
-                            )
-                        }
-                        else -> {
-                            mDrawablePath.lineTo(
-                                    pair.first.toFloat(),
-                                    pair.second.toFloat()
-                            )
-                        }
-                    }
-                }
+            when (index) {
+                0 -> path.moveTo(pair.first.toFloat(), pair.second.toFloat())
+                else -> path.lineTo(pair.first.toFloat(), pair.second.toFloat())
             }
         }
+    }
+
+    /**
+     * 获取星形路径
+     */
+    private fun setStarPath(path: Path, isBorder: Boolean) {
+        // 36为五角星的内角度
+        val radian = Math.toRadians(36.0)
+        // 五角星外圆半径
+        val radius = when {
+            isBorder -> mWidth / 2 - mBorderWidth / 2
+            else -> mWidth / 2 - mBorderWidth
+        }
+        // 五角星内圆半径
+        val radiusIn = (radius * sin(radian / 2) / cos(radian)).toFloat()
+        // 移动到五角星的起点(A点)
+        path.moveTo((mWidth / 2).toFloat(), mWidth / 2 - radius)
+        // 连接到B点
+        path.lineTo(
+                (mWidth / 2 + radiusIn * sin(radian)).toFloat(),
+                (mWidth / 2 - radiusIn * cos(radian)).toFloat()
+        )
+        // 连接到C点(第二个顶点)
+        path.lineTo(
+                (mWidth / 2 + radius * cos(radian / 2)).toFloat(),
+                (mWidth / 2 - radius * sin(radian / 2)).toFloat()
+        )
+        // 连接到D点
+        path.lineTo(
+                (mWidth / 2 + radiusIn * cos(radian / 2)).toFloat(),
+                (mWidth / 2 + radiusIn * sin(radian / 2)).toFloat()
+        )
+        // 连接到E点(第三个顶点)
+        path.lineTo(
+                (mWidth / 2 + radius * cos(radian * 2 - radian / 2)).toFloat(),
+                (mWidth / 2 + radius * sin(radian * 2 - radian / 2)).toFloat()
+        )
+        // 连接到F点
+        path.lineTo(
+                (mWidth / 2).toFloat(),
+                (mWidth / 2 + radiusIn)
+        )
+        // 连接到G点(第四个顶点)
+        path.lineTo(
+                (mWidth / 2 - radius * cos(radian * 2 - radian / 2)).toFloat(),
+                (mWidth / 2 + radius * sin(radian * 2 - radian / 2)).toFloat()
+        )
+        // 连接到H点
+        path.lineTo(
+                (mWidth / 2 - radiusIn * cos(radian / 2)).toFloat(),
+                (mWidth / 2 + radiusIn * sin(radian / 2)).toFloat()
+        )
+        // 连接到I点(第五个顶点)
+        path.lineTo(
+                (mWidth / 2 - radius * cos(radian / 2)).toFloat(),
+                (mWidth / 2 - radius * sin(radian / 2)).toFloat()
+        )
+        // 连接到J点
+        path.lineTo(
+                (mWidth / 2 - radiusIn * sin(radian)).toFloat(),
+                (mWidth / 2 - radiusIn * cos(radian)).toFloat()
+        )
     }
 
     /**
@@ -355,21 +368,18 @@ class ShapeImageView @JvmOverloads constructor(
             // 重置Path
             mBorderPath.reset()
             when (mShapeType) {
-                ShapeType.RECTANGLE -> {
-                    // 绘制矩形边框
-                    drawRectangleBorder(canvas)
-                }
-                ShapeType.CIRCLE -> {
-                    // 绘制圆形边框
-                    drawCircleBorder(canvas)
-                }
-                ShapeType.HEART -> {
-                    // 绘制心形边框
-                    drawHeartBorder(canvas)
-                }
+                // 绘制矩形边框
+                ShapeType.Rectangle -> drawRectangleBorder()
+                // 绘制圆形边框
+                ShapeType.Circle -> drawCircleBorder()
+                // 绘制心形边框
+                ShapeType.Heart -> drawHeartBorder()
+                // 绘制星形边框
+                ShapeType.Star -> drawStarBorder()
             }
             // 闭合Path
             mBorderPath.close()
+            canvas.drawPath(mBorderPath, mBorderPaint)
             canvas.restoreToCount(saveCount)
         }
     }
@@ -377,33 +387,38 @@ class ShapeImageView @JvmOverloads constructor(
     /**
      * 绘制(圆角)矩形边框
      */
-    private fun drawRectangleBorder(canvas: Canvas) {
+    private fun drawRectangleBorder() {
         mRectF.left = mBorderWidth / 2
         mRectF.top = mBorderWidth / 2
         mRectF.right = mWidth - mBorderWidth / 2
         mRectF.bottom = mHeight - mBorderWidth / 2
         mBorderPath.addRoundRect(mRectF, mRadii, Path.Direction.CW)
-        canvas.drawPath(mBorderPath, mBorderPaint)
     }
 
     /**
      * 绘制圆形边框
      */
-    private fun drawCircleBorder(canvas: Canvas) {
-        canvas.drawCircle(
+    private fun drawCircleBorder() {
+        mBorderPath.addCircle(
                 mWidth.toFloat() / 2,
                 mHeight.toFloat() / 2,
                 (mWidth.toFloat() - mBorderWidth) / 2,
-                mBorderPaint
+                Path.Direction.CW
         )
     }
 
     /**
      * 绘制心形边框
      */
-    private fun drawHeartBorder(canvas: Canvas) {
-        setHeartPath(true)
-        canvas.drawPath(mBorderPath, mBorderPaint)
+    private fun drawHeartBorder() {
+        setHeartPath(mBorderPath)
+    }
+
+    /**
+     * 绘制星形边框
+     */
+    private fun drawStarBorder() {
+        setStarPath(mBorderPath, true)
     }
 
     /**

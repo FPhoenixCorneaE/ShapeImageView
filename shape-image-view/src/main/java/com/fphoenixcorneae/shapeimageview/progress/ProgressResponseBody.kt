@@ -6,17 +6,19 @@ import okio.*
 import java.io.IOException
 
 class ProgressResponseBody(
-    private val imageUrl: String,
-    private val responseBody: ResponseBody?,
-    private val progressListener: OnProgressListener?
+        private val imageUrl: String,
+        private val responseBody: ResponseBody?,
+        private val progressListener: OnProgressListener?
 ) : ResponseBody() {
+
     private var bufferedSource: BufferedSource? = null
+
     override fun contentType(): MediaType? {
-        return responseBody!!.contentType()
+        return responseBody?.contentType()
     }
 
     override fun contentLength(): Long {
-        return responseBody!!.contentLength()
+        return responseBody?.contentLength() ?: -1
     }
 
     override fun source(): BufferedSource {
@@ -35,11 +37,11 @@ class ProgressResponseBody(
                 val bytesRead = super.read(sink, byteCount)
                 totalBytesRead += if (bytesRead == -1L) 0 else bytesRead
                 progressListener?.onProgress(
-                    imageUrl,
-                    totalBytesRead,
-                    contentLength(),
-                    bytesRead == -1L,
-                    null
+                        imageUrl,
+                        totalBytesRead,
+                        contentLength(),
+                        bytesRead == -1L,
+                        null
                 )
                 return bytesRead
             }

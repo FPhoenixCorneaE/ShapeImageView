@@ -169,15 +169,33 @@
                 app:siv_shape_type="circle" />
         </LinearLayout>
 
-        <com.fphoenixcorneae.shapeimageview.ShapeImageView
-            android:id="@+id/iv_image61"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_margin="10dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/pic_the_manga_beauties"
-            app:siv_border_color="@android:color/holo_purple"
-            app:siv_border_width="3dp"
-            app:siv_shape_type="heart" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.fphoenixcorneae.shapeimageview.ShapeImageView
+                android:id="@+id/iv_image61"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/pic_the_manga_beauties"
+                app:siv_border_color="@android:color/holo_purple"
+                app:siv_border_width="3dp"
+                app:siv_shape_type="heart" />
+
+            <com.fphoenixcorneae.shapeimageview.ShapeImageView
+                android:id="@+id/iv_image62"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/pic_the_manga_beauties"
+                app:siv_border_color="@android:color/holo_purple"
+                app:siv_border_width="3dp"
+                app:siv_shape_type="star" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
