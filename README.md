@@ -9,6 +9,25 @@
 
 ------------------------------------------------------------------------------------
 
+How to include it in your project:
+--------------
+**Step 1.** Add the JitPack repository to your build file
+```groovy
+allprojects {
+	repositories {
+		...
+		maven { url 'https://jitpack.io' }
+	}
+}
+```
+
+**Step 2.** Add the dependency
+```groovy
+dependencies {
+	implementation 'com.github.FPhoenixCorneaE:ShapeImageView:1.0.6'
+}
+```
+
 XML中使用：
 -----------
 
