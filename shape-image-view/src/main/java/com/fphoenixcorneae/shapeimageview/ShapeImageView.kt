@@ -18,7 +18,7 @@ import kotlin.math.*
 
 
 /**
- * @desc：形状图像视图：圆形、矩形（圆角矩形）、心形、星形
+ * @desc：形状图像视图：圆形、矩形（圆角矩形）、心形、三角形、星形
  * @date：2020-08-07 16:02
  */
 class ShapeImageView @JvmOverloads constructor(
@@ -30,8 +30,8 @@ class ShapeImageView @JvmOverloads constructor(
     /**
      * 图片的宽、高
      */
-    private var mWidth = 0
-    private var mHeight = 0
+    private var mWidth = 0f
+    private var mHeight = 0f
 
     /**
      * 边框：画笔、颜色、宽度、路径
@@ -81,6 +81,11 @@ class ShapeImageView @JvmOverloads constructor(
      */
     private var mHeartPointList: ArrayList<Pair<Double, Double>>? = null
 
+    /**
+     * 是否颠倒的(倒三角形)
+     */
+    private var mIsInverted = false
+
     private fun initAttr(
             context: Context,
             attrs: AttributeSet?
@@ -115,6 +120,10 @@ class ShapeImageView @JvmOverloads constructor(
                 mRadiusBottomRight = array.getDimension(
                         R.styleable.ShapeImageView_siv_radius_bottom_right,
                         0f
+                )
+                mIsInverted = array.getBoolean(
+                        R.styleable.ShapeImageView_siv_is_inverted,
+                        false
                 )
                 mShapeType = array.getInteger(
                         R.styleable.ShapeImageView_siv_shape_type,
@@ -164,19 +173,19 @@ class ShapeImageView @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        mWidth = measuredWidth
-        mHeight = measuredHeight
+        mWidth = measuredWidth.toFloat()
+        mHeight = measuredHeight.toFloat()
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        mWidth = w
-        mHeight = h
+        mWidth = w.toFloat()
+        mHeight = h.toFloat()
     }
 
     override fun onDraw(canvas: Canvas) {
         when {
-            drawable == null || mWidth == 0 || mHeight == 0 -> {
+            drawable == null || mWidth == 0f || mHeight == 0f -> {
                 return
             }
             else -> {
@@ -204,6 +213,8 @@ class ShapeImageView @JvmOverloads constructor(
             ShapeType.Circle -> drawCircle()
             // 绘制心形
             ShapeType.Heart -> drawHeart()
+            // 绘制三角形
+            ShapeType.Triangle -> drawTriangle()
             // 绘制星形
             ShapeType.Star -> drawStar()
         }
@@ -236,9 +247,9 @@ class ShapeImageView @JvmOverloads constructor(
     private fun drawCircle() {
         // 添加圆形路径,Path.Direction.CW-顺时针;Path.Direction.CCW-逆时针
         mDrawablePath.addCircle(
-                mWidth.toFloat() / 2,
-                mHeight.toFloat() / 2,
-                mWidth.toFloat() / 2 - mBorderWidth,
+                mWidth / 2,
+                mHeight / 2,
+                mWidth / 2 - mBorderWidth,
                 Path.Direction.CW
         )
     }
@@ -256,7 +267,7 @@ class ShapeImageView @JvmOverloads constructor(
         // 需要循环的次数
         val maxI = ceil(maxT / vt).toInt()
         // 控制心形大小
-        val size = min(mWidth / 2, mHeight / 2) / 16
+        val size = min(mWidth / 2, mHeight / 2) / 17
         // 根据方程得到所有点的坐标
         mHeartPointList?.clear()
         for (i in 0..maxI) {
@@ -267,10 +278,53 @@ class ShapeImageView @JvmOverloads constructor(
             // y 用来暂时保存每次循环得到的 y 坐标
             val y = 13 * cos(t) - 5 * cos(2 * t) - 2 * cos(3 * t) - cos(4 * t)
             t += vt
-            mHeartPointList?.add((x * size + (mWidth / 2).toFloat()) to (-y * size + (mHeight / 2).toFloat()))
+            mHeartPointList?.add((x * size + mWidth / 2) to (-y * size + mHeight / 2))
         }
         // 根据点的坐标，画出心形线
         setHeartPath(mDrawablePath)
+    }
+
+    /**
+     * 绘制三角形
+     */
+    private fun drawTriangle() {
+        setTrianglePath(mDrawablePath, false)
+    }
+
+    /**
+     * 获取三角形路径
+     */
+    private fun setTrianglePath(path: Path, isBorder: Boolean) {
+        when {
+            mIsInverted -> {
+                when {
+                    isBorder -> {
+                        path.moveTo(mBorderWidth / 2, mBorderWidth / 2)
+                        path.lineTo(mWidth - mBorderWidth / 2, mBorderWidth / 2)
+                        path.lineTo(mWidth / 2, mHeight - mBorderWidth / 2)
+                    }
+                    else -> {
+                        path.moveTo(mBorderWidth, mBorderWidth)
+                        path.lineTo(mWidth - mBorderWidth, mBorderWidth)
+                        path.lineTo(mWidth / 2, mHeight - mBorderWidth)
+                    }
+                }
+            }
+            else -> {
+                when {
+                    isBorder -> {
+                        path.moveTo(mWidth / 2, mBorderWidth / 2)
+                        path.lineTo(mWidth - mBorderWidth / 2, mHeight - mBorderWidth / 2)
+                        path.lineTo(mBorderWidth / 2, mHeight - mBorderWidth / 2)
+                    }
+                    else -> {
+                        path.moveTo(mWidth / 2, mBorderWidth)
+                        path.lineTo(mWidth - mBorderWidth, mHeight - mBorderWidth)
+                        path.lineTo(mBorderWidth, mHeight - mBorderWidth)
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -306,7 +360,7 @@ class ShapeImageView @JvmOverloads constructor(
         // 五角星内圆半径
         val radiusIn = (radius * sin(radian / 2) / cos(radian)).toFloat()
         // 移动到五角星的起点(A点)
-        path.moveTo((mWidth / 2).toFloat(), mWidth / 2 - radius)
+        path.moveTo((mWidth / 2), mWidth / 2 - radius)
         // 连接到B点
         path.lineTo(
                 (mWidth / 2 + radiusIn * sin(radian)).toFloat(),
@@ -329,7 +383,7 @@ class ShapeImageView @JvmOverloads constructor(
         )
         // 连接到F点
         path.lineTo(
-                (mWidth / 2).toFloat(),
+                (mWidth / 2),
                 (mWidth / 2 + radiusIn)
         )
         // 连接到G点(第四个顶点)
@@ -374,6 +428,8 @@ class ShapeImageView @JvmOverloads constructor(
                 ShapeType.Circle -> drawCircleBorder()
                 // 绘制心形边框
                 ShapeType.Heart -> drawHeartBorder()
+                // 绘制三角形边框
+                ShapeType.Triangle -> drawTriangleBorder()
                 // 绘制星形边框
                 ShapeType.Star -> drawStarBorder()
             }
@@ -400,9 +456,9 @@ class ShapeImageView @JvmOverloads constructor(
      */
     private fun drawCircleBorder() {
         mBorderPath.addCircle(
-                mWidth.toFloat() / 2,
-                mHeight.toFloat() / 2,
-                (mWidth.toFloat() - mBorderWidth) / 2,
+                mWidth / 2,
+                mHeight / 2,
+                (mWidth - mBorderWidth) / 2,
                 Path.Direction.CW
         )
     }
@@ -412,6 +468,13 @@ class ShapeImageView @JvmOverloads constructor(
      */
     private fun drawHeartBorder() {
         setHeartPath(mBorderPath)
+    }
+
+    /**
+     * 绘制三角形边框
+     */
+    private fun drawTriangleBorder() {
+        setTrianglePath(mBorderPath, true)
     }
 
     /**

@@ -9,6 +9,7 @@ import androidx.annotation.IntDef
         ShapeType.Rectangle,
         ShapeType.Circle,
         ShapeType.Heart,
+        ShapeType.Triangle,
         ShapeType.Star
 )
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
@@ -23,7 +24,10 @@ annotation class ShapeType {
         /* 心形 */
         const val Heart = 2
 
+        /* 三角形 */
+        const val Triangle = 3
+
         /* 星形 */
-        const val Star = 3
+        const val Star = 4
     }
 }

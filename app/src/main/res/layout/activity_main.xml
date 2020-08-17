@@ -197,5 +197,37 @@
                 app:siv_border_width="3dp"
                 app:siv_shape_type="star" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <com.fphoenixcorneae.shapeimageview.ShapeImageView
+                android:id="@+id/iv_image71"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:background="@android:color/black"
+                android:scaleType="centerCrop"
+                android:src="@android:color/holo_red_dark"
+                app:siv_border_color="@android:color/holo_purple"
+                app:siv_border_width="3dp"
+                app:siv_shape_type="triangle" />
+
+            <com.fphoenixcorneae.shapeimageview.ShapeImageView
+                android:id="@+id/iv_image72"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="10dp"
+                android:background="@android:color/holo_blue_light"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/pic_the_manga_beauties"
+                app:siv_border_color="@android:color/holo_purple"
+                app:siv_border_width="3dp"
+                app:siv_is_inverted="true"
+                app:siv_shape_type="triangle" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
