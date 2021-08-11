@@ -2,6 +2,8 @@
 
 ### 可以通过设置属性加载圆角矩形(四个圆角可以任意设置)、圆形、心形、三角形、星形图片以及边框。
 
+
+[![](https://jitpack.io/v/FPhoenixCorneaE/ShapeImageView.svg)](https://jitpack.io/#FPhoenixCorneaE/ShapeImageView)
     
 ------------------------------------------------------------------------------------
 
@@ -24,7 +26,7 @@ allprojects {
 **Step 2.** Add the dependency
 ```groovy
 dependencies {
-	implementation 'com.github.FPhoenixCorneaE:ShapeImageView:1.0.6'
+	implementation("com.github.FPhoenixCorneaE:ShapeImageView:$latest")
 }
 ```
 
