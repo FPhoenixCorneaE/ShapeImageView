@@ -1,3 +1,3 @@
 include ':app'
-include ':shape-image-view'
+include ':shapeImageView'
 rootProject.name = "ShapeImageView"

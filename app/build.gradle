@@ -53,7 +53,7 @@ dependencies {
     implementation Deps.kotlin.coreKtx
     implementation Deps.kotlin.stdlib
 //    implementation Config.FPhoenixCorneaE.ShapeImageView
-    implementation project(path: ':shape-image-view')
+    implementation project(path: ':shapeImageView')
     implementation(Deps.glide.glide)
     implementation(Deps.glide.okhttp3Integration)
     kapt(Deps.glide.compiler)
