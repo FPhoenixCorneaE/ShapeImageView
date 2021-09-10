@@ -32,48 +32,89 @@ dependencies {
 
 XML中使用：
 -----------
+##### 圆角矩形
 ```xml
-<com.wkz.shapeimageview.ShapeImageView
-            android:id="@+id/ivImage31"
-            android:layout_width="150dp"
-            android:layout_height="90dp"
-            android:layout_margin="10dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/pic_wrath_of_the_lich_king"
-            app:siv_border_color="@android:color/holo_purple"
-            app:siv_border_width="3dp"
-            app:siv_radius="-10dp"
-            app:siv_radius_bottom_right="10dp"
-            app:siv_radius_top_left="10dp"
-            app:siv_shape_type="rectangle" />
+<com.fphoenixcorneae.shapeimageview.ShapeImageView
+    android:id="@+id/ivImage31"
+    android:layout_width="150dp"
+    android:layout_height="90dp"
+    android:layout_margin="10dp"
+    android:scaleType="centerCrop"
+    android:src="@mipmap/pic_wrath_of_the_lich_king"
+    app:siv_border_color="@android:color/holo_purple"
+    app:siv_border_width="3dp"
+    app:siv_radius="-10dp"
+    app:siv_radius_bottom_right="10dp"
+    app:siv_radius_top_left="10dp"
+    app:siv_shape_type="rectangle" />
 ```
-
+##### 圆角矩形
 ```xml
-<com.wkz.shapeimageview.ShapeImageView
-            android:id="@+id/ivImage41"
-            android:layout_width="150dp"
-            android:layout_height="90dp"
-            android:layout_margin="10dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/pic_listen_to_the_autumn_rain"
-            app:siv_border_color="@android:color/holo_purple"
-            app:siv_border_width="3dp"
-            app:siv_radius="10dp"
-            app:siv_shape_type="rectangle" />
+<com.fphoenixcorneae.shapeimageview.ShapeImageView
+    android:id="@+id/ivImage41"
+    android:layout_width="150dp"
+    android:layout_height="90dp"
+    android:layout_margin="10dp"
+    android:scaleType="centerCrop"
+    android:src="@mipmap/pic_listen_to_the_autumn_rain"
+    app:siv_border_color="@android:color/holo_purple"
+    app:siv_border_width="3dp"
+    app:siv_radius="10dp"
+    app:siv_shape_type="rectangle" />
  ```
-
+##### 圆形
  ```xml
- <com.wkz.shapeimageview.ShapeImageView
-             android:id="@+id/ivImage51"
-             android:layout_width="90dp"
-             android:layout_height="90dp"
-             android:layout_margin="10dp"
-             android:scaleType="centerCrop"
-             android:src="@mipmap/pic_the_manga_beauties"
-             app:siv_border_color="@android:color/holo_purple"
-             app:siv_border_width="3dp"
-             app:siv_shape_type="circle" />
+ <com.fphoenixcorneae.shapeimageview.ShapeImageView
+    android:id="@+id/ivImage51"
+    android:layout_width="90dp"
+    android:layout_height="90dp"
+    android:layout_margin="10dp"
+    android:scaleType="centerCrop"
+    android:src="@mipmap/pic_the_manga_beauties"
+    app:siv_border_color="@android:color/holo_purple"
+    app:siv_border_width="3dp"
+    app:siv_shape_type="circle" />
  ```
+#### 心形
+```xml
+<com.fphoenixcorneae.shapeimageview.ShapeImageView
+    android:id="@+id/ivImage61"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_margin="10dp"
+    android:scaleType="centerCrop"
+    android:src="@mipmap/pic_the_manga_beauties"
+    app:siv_border_color="@android:color/holo_purple"
+    app:siv_border_width="3dp"
+    app:siv_shape_type="heart" />
+```
+#### 星形
+```xml
+<com.fphoenixcorneae.shapeimageview.ShapeImageView
+    android:id="@+id/ivImage62"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_margin="10dp"
+    android:scaleType="centerCrop"
+    android:src="@mipmap/pic_the_manga_beauties"
+    app:siv_border_color="@android:color/holo_purple"
+    app:siv_border_width="3dp"
+    app:siv_shape_type="star" />
+```
+#### 三角形
+```xml
+<com.fphoenixcorneae.shapeimageview.ShapeImageView
+    android:id="@+id/ivImage71"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_margin="10dp"
+    android:background="@android:color/black"
+    android:scaleType="centerCrop"
+    android:src="@android:color/holo_red_dark"
+    app:siv_border_color="@android:color/holo_purple"
+    app:siv_border_width="3dp"
+    app:siv_shape_type="triangle" />
+```
 ------------------------------------------------
 
 加载图片
